@@ -42,6 +42,7 @@ UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #include <Domain.h>
 #include <Node.h>
 #include <NodeIter.h>
+#include <DOF_Group.h>
 #include <Matrix.h>
 #include <LoadPattern.h>
 #include <FileStream.h>
@@ -184,7 +185,7 @@ int OPS_nodeDisp()
 	double value = (*nodalResponse)(data[1]);
 	numdata = 1;
 
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	    opserr<<"WARNING nodeDisp - failed to read double inputs\n";
 	    return -1;
 	}
@@ -196,7 +197,7 @@ int OPS_nodeDisp()
 	for (int i=0; i<size; i++) {
 	    values[i] = (*nodalResponse)(i);
 	}
-	if (OPS_SetDoubleOutput(&size, &values[0])) {
+	if (OPS_SetDoubleOutput(&size, &values[0], false) < 0) {
 	    opserr<<"WARNING nodeDisp - failed to read double inputs\n";
 	    return -1;
 	}
@@ -246,7 +247,7 @@ int OPS_nodeReaction()
       numdata = 1;
 
       // now we copy the value to the tcl string that is returned
-      if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+      if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	  opserr<<"WARNING nodeReaction - failed to set double output\n";
 	  return -1;
       }
@@ -257,7 +258,7 @@ int OPS_nodeReaction()
 	for (int i=0; i<size; i++) {
 	    values[i] = (*nodalResponse)(i);
 	}
-	if (OPS_SetDoubleOutput(&size, &values[0]) < 0) {
+	if (OPS_SetDoubleOutput(&size, &values[0], false) < 0) {
 	    opserr<<"WARNING nodeReaction - failed to set double output\n";
 	    return -1;
 	}
@@ -313,7 +314,7 @@ int OPS_nodeEigenvector()
 	size = 1;
 
 	// now we copy the value to the tcl string that is returned
-	if (OPS_SetDoubleOutput(&size, &value) < 0) {
+	if (OPS_SetDoubleOutput(&size, &value, true) < 0) {
 	    opserr<<"WARNING nodeEigenvector - failed to set double output\n";
 	    return -1;
 	}
@@ -326,7 +327,7 @@ int OPS_nodeEigenvector()
 	}
 
 	// now we copy the value to the tcl string that is returned
-	if (OPS_SetDoubleOutput(&size, &values(0)) < 0) {
+	if (OPS_SetDoubleOutput(&size, &values(0), false) < 0) {
 	    opserr<<"WARNING nodeEigenvector - failed to set double output\n";
 	    return -1;
 	}
@@ -341,7 +342,7 @@ int OPS_getTime()
     if (theDomain == 0) return -1;
     double time = theDomain->getCurrentTime();
     int numdata = 1;
-    if (OPS_SetDoubleOutput(&numdata, &time) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &time, true) < 0) {
 	opserr << "WARNING failed to get current time\n";
 	return -1;
     }
@@ -382,14 +383,28 @@ int OPS_eleResponse()
 	    for (int i=0; i<size; i++) {
 		newdata[i] = (*data)(i);
 	    }
-	    if (OPS_SetDoubleOutput(&size, newdata) < 0) {
+	    if (OPS_SetDoubleOutput(&size, newdata, false) < 0) {
 		opserr << "WARNING failed to et response\n";
 		delete [] newdata;
 		return -1;
 	    }
 	    delete [] newdata;
 
+	} else {
+        int size = 0;
+        double* newdata = 0;
+        if (OPS_SetDoubleOutput(&size, newdata, false) < 0) {
+            opserr << "WARNING failed to et response\n";
+            return -1;
+        }
 	}
+    } else {
+        int size = 0;
+        double* newdata = 0;
+        if (OPS_SetDoubleOutput(&size, newdata, false) < 0) {
+            opserr << "WARNING failed to et response\n";
+            return -1;
+        }
     }
     return 0;
 
@@ -418,7 +433,7 @@ int OPS_getLoadFactor()
     }
 
     double factor = thePattern->getLoadFactor();
-    if (OPS_SetDoubleOutput(&numdata, &factor) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &factor, true) < 0) {
 	opserr << "WARNING failed to set load factor\n";
 	return -1;
     }
@@ -1045,7 +1060,7 @@ int OPS_eleForce()
 	    double value = (*force)(dof);
 
 	    // now we copy the value to the tcl string that is returned
-	    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 		opserr << "WARNING eleForce failed to set output\n";
 		return -1;
 	    }
@@ -1056,7 +1071,7 @@ int OPS_eleForce()
 	    for (int i=0; i<size; i++) {
 		data[i] = (*force)(i);
 	    }
-	    if (OPS_SetDoubleOutput(&size, data) < 0) {
+	    if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 		opserr << "WARNING eleForce failed to set outputs\n";
 		delete [] data;
 		return -1;
@@ -1118,7 +1133,7 @@ int OPS_eleDynamicalForce()
 	double value = force(dof);
 
 	// now we copy the value to the tcl string that is returned
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, false) < 0) {
 	    opserr << "WARNING eleDyanmicalForce failed to set output\n";
 	    return -1;
 	}
@@ -1129,7 +1144,7 @@ int OPS_eleDynamicalForce()
 	for (int i=0; i<size; i++) {
 	    data[i] = force(i);
 	}
-	if (OPS_SetDoubleOutput(&size, data) < 0) {
+	if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 	    opserr << "WARNING eleDyanmicalForce failed to set outputs\n";
 	    delete [] data;
 	    return -1;
@@ -1189,7 +1204,7 @@ int OPS_nodeUnbalance()
 	double value = (*nodalResponse)(dof);
 
 	// now we copy the value to the tcl string that is returned
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	    opserr << "WARNING nodeUnbalance failed to set output\n";
 	    return -1;
 	}
@@ -1200,7 +1215,7 @@ int OPS_nodeUnbalance()
 	for (int i=0; i<size; i++) {
 	    data[i] = (*nodalResponse)(i);
 	}
-	if (OPS_SetDoubleOutput(&size, data) < 0) {
+	if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 	    opserr << "WARNING eleDyanmicalForce failed to set outputs\n";
 	    delete [] data;
 	    return -1;
@@ -1260,7 +1275,7 @@ int OPS_nodeVel()
 	double value = (*nodalResponse)(dof);
 
 	// now we copy the value to the tcl string that is returned
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	    opserr << "WARNING nodeVel failed to set output\n";
 	    return -1;
 	}
@@ -1271,7 +1286,7 @@ int OPS_nodeVel()
 	for (int i=0; i<size; i++) {
 	    data[i] = (*nodalResponse)(i);
 	}
-	if (OPS_SetDoubleOutput(&size, data) < 0) {
+	if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 	    opserr << "WARNING nodeVel failed to set outputs\n";
 	    delete [] data;
 	    return -1;
@@ -1331,7 +1346,7 @@ int OPS_nodeAccel()
 	double value = (*nodalResponse)(dof);
 
 	// now we copy the value to the tcl string that is returned
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	    opserr << "WARNING nodeAccel failed to set output\n";
 	    return -1;
 	}
@@ -1342,7 +1357,7 @@ int OPS_nodeAccel()
 	for (int i=0; i<size; i++) {
 	    data[i] = (*nodalResponse)(i);
 	}
-	if (OPS_SetDoubleOutput(&size, data) < 0) {
+	if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 	    opserr << "WARNING nodeAccel failed to set outputs\n";
 	    delete [] data;
 	    return -1;
@@ -1387,7 +1402,7 @@ int OPS_nodeResponse()
     numdata = 1;
 
     // now we copy the value to the tcl string that is returned
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr << "WARNING failed to set output\n";
 	return -1;
     }
@@ -1449,7 +1464,7 @@ int OPS_nodeCoord()
 	for (int i=0; i<size; i++) {
 	    data[i] = coords(i);
 	}
-	if (OPS_SetDoubleOutput(&size, data) < 0) {
+	if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 	    opserr << "WARNING failed to set output\n";
 	    delete [] data;
 	    return -1;
@@ -1458,7 +1473,7 @@ int OPS_nodeCoord()
 
     } else if (dim < size) {
 	double value = coords(dim); // -1 for OpenSees vs C indexing
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	    opserr << "WARNING failed to set output\n";
 	    return -1;
 	}
@@ -1562,14 +1577,66 @@ int OPS_eleNodes()
 	    data[i] = (int)(*tags)(i);
 	}
 
-	if (OPS_SetIntOutput(&numTags, data) < 0) {
+	if (OPS_SetIntOutput(&numTags, data, false) < 0) {
 	    opserr << "WARNING failed to set outputs\n";
 	    delete [] data;
 	    return -1;
 	}
 
 	delete [] data;
+    } else {
+        int numTags = 0;
+        int* data = 0;
+        if (OPS_SetIntOutput(&numTags, data, false) < 0) {
+            opserr << "WARNING failed to set outputs\n";
+            return -1;
+        }
     }
+
+    return 0;
+}
+
+int OPS_nodeDOFs()
+{
+    if (OPS_GetNumRemainingInputArgs() < 1) {
+	opserr << "WARNING want - nodeDOFs nodeTag?\n";
+	return -1;
+    }
+
+    int tag;
+    int numdata = 1;
+
+    if (OPS_GetIntInput(&numdata, &tag) < 0) {
+	opserr << "WARNING nodeDOFs nodeTag?\n";
+	return -1;
+    }
+
+    Domain* theDomain = OPS_GetDomain();
+    if (theDomain == 0) return -1;
+
+    Node *theNode = theDomain->getNode(tag);
+    if (theNode == 0) {
+	opserr << "WARNING nodeDOFs node " << tag << " not found" << endln;
+	return -1;
+    }
+    int numDOF = theNode->getNumberDOF();
+
+    DOF_Group *theDOFgroup = theNode->getDOF_GroupPtr();
+    if (theDOFgroup == 0) {
+      opserr << "WARNING nodeDOFs DOF group null" << endln;
+      return -1;
+    }
+    const ID &eqnNumbers = theDOFgroup->getID();
+    int *data = new int[numDOF];
+    for (int i = 0; i < numDOF; i++) {
+      data[i] = eqnNumbers(i);
+    }
+    if (OPS_SetIntOutput(&numDOF, data, false) < 0) {
+      opserr << "WARNING nodeDOFs failed to set outputs\n";
+      delete [] data;
+      return -1;
+    }
+    delete [] data;
 
     return 0;
 }
@@ -1609,7 +1676,7 @@ int OPS_nodeMass()
     else {
 	const Matrix &mass = theNode->getMass();
 	double value = mass(dof-1,dof-1);
-	if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	    opserr << "WARNING nodeMass failed to set mass\n";
 	}
     }
@@ -1640,7 +1707,7 @@ int OPS_nodePressure()
     if(thePC != 0) {
         pressure = thePC->getPressure();
     }
-    if (OPS_SetDoubleOutput(&numdata, &pressure) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &pressure, true) < 0) {
 	opserr << "WARNING failed to get presure\n";
 	return -1;
     }
@@ -1659,7 +1726,7 @@ int OPS_nodeBounds()
     for (int i = 0; i < size; i++)
       data[i] = bounds(i);
 
-    if (OPS_SetDoubleOutput(&size, data) < 0) {
+    if (OPS_SetDoubleOutput(&size, data, false) < 0) {
 	opserr << "WARNING failed to get node bounds\n";
 	delete [] data;
 	return -1;
@@ -1725,12 +1792,14 @@ int OPS_getEleTags()
 	}
     }
 
-    if (eletags.empty()) return 0;
+    int size = 0;
+    int *data = 0;
+    if (!eletags.empty()) {
+        size = (int) eletags.size();
+        data = &eletags[0];
+    }
 
-    int size = (int)eletags.size();
-    int* data = &eletags[0];
-
-    if (OPS_SetIntOutput(&size, data) < 0) {
+    if (OPS_SetIntOutput(&size, data, false) < 0) {
 	opserr << "WARNING failed to set outputs\n";
 	return -1;
     }
@@ -1780,12 +1849,14 @@ int OPS_getNodeTags()
 	}
     }
 
-    if (nodetags.empty()) return 0;
+    int size = 0;
+    int* data = 0;
+    if (!nodetags.empty()) {
+        size = (int)nodetags.size();
+        data = &nodetags[0];
+    }
 
-    int size = (int)nodetags.size();
-    int* data = &nodetags[0];
-
-    if (OPS_SetIntOutput(&size, data) < 0) {
+    if (OPS_SetIntOutput(&size, data, false) < 0) {
 	opserr << "WARNING failed to set outputs\n";
 	return -1;
     }
@@ -1857,7 +1928,7 @@ int OPS_sectionForce()
     double value = theVec(dof-1);
     numdata = 1;
 
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -1932,7 +2003,7 @@ int OPS_sectionDeformation()
     double value = theVec(dof-1);
     numdata = 1;
 
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2000,6 +2071,11 @@ int OPS_sectionStiffness()
     int nsdof = theMat.noCols();
     int size = nsdof*nsdof;
     if (size == 0) {
+        if (OPS_SetDoubleOutput(&size, 0, false) < 0) {
+            opserr << "WARNING failed to set output\n";
+            delete theResponse;
+            return -1;
+        }
 	delete theResponse;
 	return 0;
     }
@@ -2013,7 +2089,7 @@ int OPS_sectionStiffness()
 	}
     }
 
-    if (OPS_SetDoubleOutput(&size, &values[0]) < 0) {
+    if (OPS_SetDoubleOutput(&size, &values[0], false) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2081,6 +2157,11 @@ int OPS_sectionFlexibility()
     int nsdof = theMat.noCols();
     int size = nsdof*nsdof;
     if (size == 0) {
+        if (OPS_SetDoubleOutput(&size, 0, false) < 0) {
+            opserr << "WARNING failed to set output\n";
+            delete theResponse;
+            return -1;
+        }
 	delete theResponse;
 	return 0;
     }
@@ -2094,7 +2175,7 @@ int OPS_sectionFlexibility()
 	}
     }
 
-    if (OPS_SetDoubleOutput(&size, &values[0]) < 0) {
+    if (OPS_SetDoubleOutput(&size, &values[0], false) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2163,7 +2244,7 @@ int OPS_sectionLocation()
     double value = theVec(secNum-1);
     numdata = 1;
 
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2232,7 +2313,7 @@ int OPS_sectionWeight()
     double value = theVec(secNum-1);
     numdata = 1;
 
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2296,7 +2377,7 @@ int OPS_basicDeformation()
 	data[i] = theVec(i);
     }
 
-    if (OPS_SetDoubleOutput(&nbf, &data[0]) < 0) {
+    if (OPS_SetDoubleOutput(&nbf, &data[0], false) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2347,7 +2428,7 @@ int OPS_basicForce()
     Response *theResponse = theElement->setResponse(argvv, argcc, dummy);
     if (theResponse == 0) {
 	double res = 0.0;
-	if (OPS_SetDoubleOutput(&numdata, &res) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &res, false) < 0) {
 	    opserr << "WARNING: failed to set output\n";
 	    return -1;
 	}
@@ -2365,7 +2446,7 @@ int OPS_basicForce()
 	data[i] = theVec(i);
     }
 
-    if (OPS_SetDoubleOutput(&nbf, &data[0]) < 0) {
+    if (OPS_SetDoubleOutput(&nbf, &data[0], false) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2426,7 +2507,14 @@ int OPS_basicStiffness()
 
     std::vector<double> values;
     int size = nbf*nbf;
-    if (size == 0) return 0;
+    if (size == 0) {
+        if (OPS_SetDoubleOutput(&size, 0, false) < 0) {
+            opserr << "WARNING failed to set output\n";
+            delete theResponse;
+            return -1;
+        }
+        return 0;
+    }
     values.reserve(size);
 
 
@@ -2436,7 +2524,7 @@ int OPS_basicStiffness()
 	}
     }
 
-    if (OPS_SetDoubleOutput(&size, &values[0]) < 0) {
+    if (OPS_SetDoubleOutput(&size, &values[0], false) < 0) {
 	opserr << "WARNING failed to set output\n";
 	delete theResponse;
 	return -1;
@@ -2453,6 +2541,43 @@ int OPS_version()
 	opserr << "WARNING failed to set version string\n";
 	return -1;
     }
+
+    return 0;
+}
+
+int OPS_logFile()
+{
+    if (OPS_GetNumRemainingInputArgs() < 1) { 
+	opserr << "WARNING logFile fileName? - no filename supplied\n";
+	return -1;
+    }
+    openMode mode = OVERWRITE;
+    bool echo = true;
+
+    const char* filename = OPS_GetString();
+    if (strcmp(filename, "Invalid String Input!") == 0) {
+	opserr << "WARNING: invalid string input\n";
+	return -1;
+    }
+
+    while (OPS_GetNumRemainingInputArgs() > 0) {
+
+	const char* opt = OPS_GetString();
+	
+	if (strcmp(opt,"-append") == 0) {
+	    mode = APPEND;
+	} else if (strcmp(opt,"-noEcho") == 0) {
+	    echo = false;
+	}
+    }
+
+    if (opserr.setFile(filename, mode, echo) < 0) {
+	opserr << "WARNING logFile " << filename << " failed to set the file\n";
+	return -1;
+    }
+
+    // const char *pwd = getInterpPWD(interp);  
+    // simulationInfo.addOutputFile(argv[1], pwd);
 
     return 0;
 }
@@ -2494,7 +2619,7 @@ int OPS_sensNodeDisp()
     double value = theNode->getDispSensitivity(data[1],gradIndex);
 
     numdata = 1;
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr<<"WARNING failed to set output\n";
 	return -1;
     }
@@ -2538,7 +2663,7 @@ int OPS_sensNodeVel()
     double value = theNode->getVelSensitivity(data[1],gradIndex);
 
     numdata = 1;
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr<<"WARNING failed to set output\n";
 	return -1;
     }
@@ -2582,7 +2707,7 @@ int OPS_sensNodeAccel()
     double value = theNode->getAccSensitivity(data[1],gradIndex);
 
     numdata = 1;
-    if (OPS_SetDoubleOutput(&numdata, &value) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &value, true) < 0) {
 	opserr<<"WARNING failed to set output\n";
 	return -1;
     }
@@ -2623,7 +2748,7 @@ int OPS_sensLambda()
     double factor = thePattern->getLoadFactorSensitivity(gradIndex);
 
     numdata = 1;
-    if (OPS_SetDoubleOutput(&numdata, &factor) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &factor, true) < 0) {
 	opserr<<"WARNING failed to set output\n";
 	return -1;
     }
@@ -2702,7 +2827,7 @@ int OPS_sensSectionForce()
     if (theResponse == 0) {
 	numdata = 1;
 	double res = 0.0;
-	if (OPS_SetDoubleOutput(&numdata, &res) < 0) {
+	if (OPS_SetDoubleOutput(&numdata, &res, true) < 0) {
 	    opserr<<"WARNING failed to set output\n";
 	    return -1;
 	}
@@ -2715,7 +2840,7 @@ int OPS_sensSectionForce()
     Vector theVec = *(info.theVector);
 
     numdata = theVec.Size();
-    if (OPS_SetDoubleOutput(&numdata, &theVec(dof-1)) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &theVec(dof-1), false) < 0) {
 	opserr<<"WARNING failed to set output\n";
 	return -1;
     }
@@ -2765,7 +2890,7 @@ int OPS_sensNodePressure()
     }
 
     numdata = 1;
-    if (OPS_SetDoubleOutput(&numdata, &dp) < 0) {
+    if (OPS_SetDoubleOutput(&numdata, &dp, true) < 0) {
 	opserr<<"WARNING failed to set output\n";
 	return -1;
     }

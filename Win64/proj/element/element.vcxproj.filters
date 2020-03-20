@@ -120,6 +120,9 @@
     <Filter Include="absorbentBoundaries">
       <UniqueIdentifier>{1b806f65-5bd2-4429-9294-d36935d459e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gradientInelasticBeamColumn">
+      <UniqueIdentifier>{516fa8a8-dc2b-4a36-a664-8524314d4ce9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\SRC\element\Element.cpp">
@@ -171,6 +174,9 @@
       <Filter>zeroLength</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLength.cpp">
+      <Filter>zeroLength</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthVG_HG.cpp">
       <Filter>zeroLength</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\zeroLength\ZeroLengthContact2D.cpp">
@@ -258,9 +264,6 @@
       <Filter>elasticBeamColumn</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\ModElasticBeam2d.cpp">
-      <Filter>elasticBeamColumn</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\TclElasticBeamCommand.cpp">
       <Filter>elasticBeamColumn</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\brick\BbarBrick.cpp">
@@ -482,15 +485,6 @@
     <ClCompile Include="..\..\..\SRC\element\generic\GenericCopy.cpp">
       <Filter>generic</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\generic\TclGenericClientCommand.cpp">
-      <Filter>generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\generic\TclGenericCopyCommand.cpp">
-      <Filter>generic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TclTwoNodeLinkCommand.cpp">
-      <Filter>twoNodeLink</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\twoNodeLink\TwoNodeLink.cpp">
       <Filter>twoNodeLink</Filter>
     </ClCompile>
@@ -501,15 +495,6 @@
       <Filter>adapter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\adapter\Adapter.cpp">
-      <Filter>adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\adapter\TclActuatorCommand.cpp">
-      <Filter>adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\adapter\TclActuatorCorotCommand.cpp">
-      <Filter>adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\adapter\TclAdapterCommand.cpp">
       <Filter>adapter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\elastomericBearing\ElastomericBearingBoucWen2d.cpp">
@@ -534,15 +519,6 @@
       <Filter>elastomericBearing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\elastomericBearing\LeadRubberX.cpp">
-      <Filter>elastomericBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingBoucWenCommand.cpp">
-      <Filter>elastomericBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingPlasticityCommand.cpp">
-      <Filter>elastomericBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\elastomericBearing\TclElastomericBearingUFRPCommand.cpp">
       <Filter>elastomericBearing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\FlatSliderSimple2d.cpp">
@@ -573,15 +549,6 @@
       <Filter>frictionBearing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\TPB1D.cpp">
-      <Filter>frictionBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclFlatSliderCommand.cpp">
-      <Filter>frictionBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclRJWatsonEQSCommand.cpp">
-      <Filter>frictionBearing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\SRC\element\frictionBearing\TclSingleFPCommand.cpp">
       <Filter>frictionBearing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\frictionBearing\TripleFrictionPendulum.cpp">
@@ -886,6 +853,33 @@
     </ClCompile>
     <ClCompile Include="..\..\..\SRC\element\elasticBeamColumn\WheelRail.cpp">
       <Filter>elasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\dispBeamColumn\TimoshenkoBeamColumn2d.cpp">
+      <Filter>dispBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\twoNodeLink\LinearElasticSpring.cpp">
+      <Filter>twoNodeLink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\twoNodeLink\Inerter.cpp">
+      <Filter>twoNodeLink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\ExternalElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\gradientInelasticBeamColumn\GradientInelasticBeamColumn2d.cpp">
+      <Filter>gradientInelasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\gradientInelasticBeamColumn\GradientInelasticBeamColumn3d.cpp">
+      <Filter>gradientInelasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\gradientInelasticBeamColumn\TclGradientInelasticBeamColumnCommand.cpp">
+      <Filter>gradientInelasticBeamColumn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\forceBeamColumn\SimpsonBeamIntegration.cpp">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SRC\element\joint\LehighJoint2d.cpp">
+      <Filter>joint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1548,6 +1542,30 @@
     </ClInclude>
     <ClInclude Include="..\..\..\SRC\element\elasticBeamColumn\WheelRail.h">
       <Filter>elasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\dispBeamColumn\TimoshenkoBeamColumn2d.h">
+      <Filter>dispBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\twoNodeLink\LinearElasticSpring.h">
+      <Filter>twoNodeLink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\twoNodeLink\Inerter.h">
+      <Filter>twoNodeLink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\ExternalElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\gradientInelasticBeamColumn\GradientInelasticBeamColumn2d.h">
+      <Filter>gradientInelasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\gradientInelasticBeamColumn\GradientInelasticBeamColumn3d.h">
+      <Filter>gradientInelasticBeamColumn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\forceBeamColumn\SimpsonBeamIntegration.h">
+      <Filter>forceBeamColumn\beamIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SRC\element\joint\LehighJoint2d.h">
+      <Filter>joint</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
